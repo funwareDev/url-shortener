@@ -18,7 +18,7 @@ public class UrlController: ControllerBase
         _urlManagerService = urlManagerService;
     }
 
-    [HttpPost]
+    [HttpPost("short-url")]
     public async Task<IActionResult> ShortenUrl(ShortenUrlRequest request)
     {
         ShortenUrlResponse result;
@@ -28,25 +28,46 @@ public class UrlController: ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             throw;
         }
         return Ok(result);
     }
     
-    [HttpPost("")]
-    public async Task<IActionResult> Get(ShortenUrlRequest request)
+    [HttpPost]
+    public async Task<IActionResult> Get(GetUrlRequest request)
     {
-        ShortenUrlResponse result;
+        GetUrlResponse result;
         try
         {
-            result = await _urlManagerService.Add(request);
+            result = await _urlManagerService.Get(request);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             throw;
         }
+        return Ok(result);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(DeleteUrlRequest request)
+    {
+        DeleteUrlResponse result;
+        try
+        {
+            result = await _urlManagerService.Delete(request);
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get(string id)
+    {
+        var result = await _urlManagerService.Get(id);
+
         return Ok(result);
     }
 }
