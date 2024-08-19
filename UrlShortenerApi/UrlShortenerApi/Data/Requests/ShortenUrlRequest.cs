@@ -2,5 +2,5 @@
 
 public class ShortenUrlRequest
 {
-    public string LongUrl { get; set; }
+    public required string LongUrl { get; set; } = null!;
 }

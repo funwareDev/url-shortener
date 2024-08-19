@@ -5,5 +5,5 @@ namespace UrlShortenerApi.Services.Abstract;
 
 public interface IUrlShortenerService
 {
-    Task<ShortenUrlResponse> ShortenUrl(ShortenUrlRequest request);
+    Task<string> ShortenUrl(string longUrl);
 }

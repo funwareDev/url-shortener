@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortenerApi", "UrlShortenerApi\UrlShortenerApi.csproj", "{220905CB-0B4F-4D17-976B-991FA8CFA71C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortenerTests", "..\UrlShortenerTests\UrlShortenerTests.csproj", "{1FFB9219-FD8B-4CAD-BF4D-B7161B9B3928}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{220905CB-0B4F-4D17-976B-991FA8CFA71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{220905CB-0B4F-4D17-976B-991FA8CFA71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{220905CB-0B4F-4D17-976B-991FA8CFA71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FFB9219-FD8B-4CAD-BF4D-B7161B9B3928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FFB9219-FD8B-4CAD-BF4D-B7161B9B3928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FFB9219-FD8B-4CAD-BF4D-B7161B9B3928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FFB9219-FD8B-4CAD-BF4D-B7161B9B3928}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
