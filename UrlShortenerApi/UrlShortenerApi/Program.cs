@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Abstractions;
 using Microsoft.Identity.Web.Resource;
@@ -16,9 +17,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true) 
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true) 
+    .AddEnvironmentVariables();
+
 builder.Services
-    .AddDbContext<UrlsDbContext>() //add connection string from environment variable or secret
-    .AddDbContext<UsersDbContext>();
+    .AddDbContext<UrlsDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")))
+    .AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 
 builder.Services.AddApiVersioning(option =>
 {
