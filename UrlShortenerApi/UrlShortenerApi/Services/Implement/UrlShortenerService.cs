@@ -32,7 +32,7 @@ public class UrlShortenerService : IUrlShortenerService
             for (int j = 0; j < hash.Length - countOfCharacters; j++)
             {
                 var shortLinkId = hash.Substring(j, countOfCharacters);
-                if (await LinkCanBeUsed(shortLinkId))
+                if (!await LinkAlreadyExists(shortLinkId))
                 {
                     return shortLinkId;
                 }
@@ -42,7 +42,7 @@ public class UrlShortenerService : IUrlShortenerService
         throw new Exception("Couldn't shorten link");
     }
 
-    private async Task<bool> LinkCanBeUsed(string linkId)
+    private async Task<bool> LinkAlreadyExists(string linkId)
     {
         return await _urlsDbContext.Urls.AnyAsync(link => link.Identificator.Equals(linkId));
     }

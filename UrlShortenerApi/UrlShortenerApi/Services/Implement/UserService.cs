@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.Intrinsics.Arm;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,19 +24,16 @@ public class UserService : IUserService
         _usersDbContext = usersDbContext;
     }
 
-    private const int LengthOfSalt = 10;
-
     public async Task<LoginResponse> Login(LoginRequest request)
     {
-        var user = await _usersDbContext.Users
-            .FirstOrDefaultAsync(user => user.Username.Equals(request.Username));
+        var user = await GetUserByUserName(request.Username);
 
         if (user == null)
         {
             throw new Exception("User with such name does not exist.");
         }
 
-        var salt = StringToSha256Hash(request.Password).Substring(0, LengthOfSalt);
+        var salt = user.PasswordSalt;
         var passwordHash = StringToSha256Hash(request.Password + salt);
 
         if (!user.PasswordHash.Equals(passwordHash))
@@ -53,7 +49,7 @@ public class UserService : IUserService
 
     private string GenerateAuthToken(string username)
     {
-        var claims = new List<Claim> { new("username", username) };
+        var claims = new List<Claim> { new("Username", username) };
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]
             ?? throw new Exception("JWT Secret was not set.")));
@@ -78,15 +74,19 @@ public class UserService : IUserService
             throw new Exception("User with such name exists.");
         }
 
-        var salt = StringToSha256Hash(request.Password).Substring(0, LengthOfSalt);
+        var salt = Guid.NewGuid().ToString().Replace("-", "");
         var passwordHash = StringToSha256Hash(request.Password + salt);
 
-        var user = await _usersDbContext.Users.AddAsync(new User()
+        var makeUserAdmin = request is { Role: not null, Secret: not null } && request.Secret.Equals(_configuration["AdminSecret"]);
+
+        await _usersDbContext.Users.AddAsync(new User()
         {
             Username = request.Username,
             PasswordHash = passwordHash,
-            PasswordSalt = salt
+            PasswordSalt = salt,
+            Role = makeUserAdmin ? Role.Admin : Role.User
         });
+        await _usersDbContext.SaveChangesAsync();
 
         return new RegisterResponse()
         {
@@ -94,22 +94,27 @@ public class UserService : IUserService
         };
     }
 
-    private async Task<bool> UserExists(string requestUsername)
+    public async Task<bool> UserExists(string requestUsername)
     {
         return await _usersDbContext.Users.AnyAsync(user => user.Username.Equals(requestUsername));
+    }
+
+    public async Task<User> GetUserByUserName(string requestUsername)
+    {
+        return await _usersDbContext.Users.FirstAsync(user => user.Username.Equals(requestUsername));
     }
 
     private string StringToSha256Hash(string text)
     {
         if (IsNullOrEmpty(text))
+        {
             return Empty;
+        }
 
-        var sha = HMACSHA256.Create();
-
-
-        var textData = System.Text.Encoding.UTF8.GetBytes(text);
+        var sha = SHA256.Create();
+        var textData = Encoding.UTF8.GetBytes(text);
         var hash = sha.ComputeHash(textData);
 
         return BitConverter.ToString(hash).Replace("-", Empty);
     }
-}
+} 
