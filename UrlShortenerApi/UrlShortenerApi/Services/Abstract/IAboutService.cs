@@ -6,6 +6,8 @@ namespace UrlShortenerApi.Services.Abstract;
 
 public interface IAboutService
 {
-    Task<StaticData> Get();
+    Task Create(StaticData staticData);
+    Task<GetStaticDataResponse> Get();
     Task<UpdateStaticDataResponse> Update(UpdateStaticDataRequest request);
+    Task Delete(string staticDataName);
 }
