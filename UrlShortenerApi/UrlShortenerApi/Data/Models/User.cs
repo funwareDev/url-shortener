@@ -6,4 +6,6 @@ public class User
     public string Username { get; set; }
     public string PasswordHash { get; set; }
     public string PasswordSalt { get; set; }
+    public Role Role { get; set; }
+    public ICollection<Url> Urls { get; } = new List<Url>();
 }

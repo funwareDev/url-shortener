@@ -1,6 +1,6 @@
 ﻿namespace UrlShortenerApi.Data.Responses;
 
-public class DeleteUrlResponse
+public class UpdateStaticDataResponse
 {
     public bool Succeed { get; set; }
 }

@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using UrlShortenerApi.Data.Requests;
 using UrlShortenerApi.Data.Responses;
 using UrlShortenerApi.Services.Abstract;
 
 namespace UrlShortenerApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
 
 public class AuthController : ControllerBase
 {
@@ -14,7 +19,7 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         LoginResponse result;
@@ -22,6 +27,24 @@ public class AuthController : ControllerBase
         try
         {
             result = await _userService.Login(request);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return Ok(result);
+    }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        RegisterResponse result;
+        
+        try
+        {
+            result = await _userService.Register(request);
         }
         catch (Exception e)
         {

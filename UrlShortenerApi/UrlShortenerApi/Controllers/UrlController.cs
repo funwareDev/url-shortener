@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UrlShortenerApi.Data.Requests;
 using UrlShortenerApi.Data.Responses;
@@ -6,9 +6,8 @@ using UrlShortenerApi.Services.Abstract;
 
 namespace UrlShortenerApi.Controllers;
 
-[Controller]
+[ApiController]
 [Route("[controller]")]
-[ApiVersion(1.0)]
 public class UrlController: ControllerBase
 {
     private IUrlManagerService _urlManagerService;
@@ -19,12 +18,13 @@ public class UrlController: ControllerBase
     }
 
     [HttpPost("short-url")]
+    [Authorize]
     public async Task<IActionResult> ShortenUrl(ShortenUrlRequest request)
     {
         ShortenUrlResponse result;
         try
         {
-            result = await _urlManagerService.Add(request);
+            result = await _urlManagerService.Create(request);
         }
         catch (Exception e)
         {
@@ -48,7 +48,7 @@ public class UrlController: ControllerBase
         return Ok(result);
     }
     
-    [HttpPost]
+    [HttpDelete]
     public async Task<IActionResult> Delete(DeleteUrlRequest request)
     {
         DeleteUrlResponse result;
