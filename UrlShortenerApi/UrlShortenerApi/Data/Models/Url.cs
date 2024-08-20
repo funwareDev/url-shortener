@@ -8,4 +8,5 @@ public class Url
     public string Identificator { get; set; }
     public string LongUrl { get; set; }
     public User CreatedBy { get; set; }
+    public DateTime CreatedDate { get; set; }
 }

@@ -75,9 +75,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+var connectionString = builder.Configuration.GetConnectionString("local");
 builder.Services
-    .AddDbContext<UrlsDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")))
-    .AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")));
+    .AddDbContext<UrlsDbContext>(options => options.UseSqlServer(connectionString))
+    .AddDbContext<UsersDbContext>(options => options.UseSqlServer(connectionString))
+    .AddDbContext<AboutDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();
 
@@ -90,6 +92,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddHttpContextAccessor();  
 builder.Services.AddTransient<IUrlShortenerService, UrlShortenerService>();
 builder.Services.AddTransient<IUrlManagerService, UrlManagerService>();
+builder.Services.AddTransient<IAboutService, AboutService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
