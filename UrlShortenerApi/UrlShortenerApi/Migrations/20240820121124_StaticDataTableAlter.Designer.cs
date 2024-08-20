@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrlShortenerApi.Data.Contexts;
 
@@ -11,9 +12,11 @@ using UrlShortenerApi.Data.Contexts;
 namespace UrlShortenerApi.Migrations
 {
     [DbContext(typeof(ShortenUrlsContext))]
-    partial class ShortenUrlsContextModelSnapshot : ModelSnapshot
+    [Migration("20240820121124_StaticDataTableAlter")]
+    partial class StaticDataTableAlter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
