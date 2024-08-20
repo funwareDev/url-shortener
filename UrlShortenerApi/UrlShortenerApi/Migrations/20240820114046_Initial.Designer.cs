@@ -9,11 +9,11 @@ using UrlShortenerApi.Data.Contexts;
 
 #nullable disable
 
-namespace UrlShortenerApi.Migrations.UrlsDb
+namespace UrlShortenerApi.Migrations
 {
-    [DbContext(typeof(UrlsDbContext))]
-    [Migration("20240820104032_CreatedDateAdded")]
-    partial class CreatedDateAdded
+    [DbContext(typeof(ShortenUrlsContext))]
+    [Migration("20240820114046_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,20 @@ namespace UrlShortenerApi.Migrations.UrlsDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("UrlShortenerApi.Data.Models.StaticData", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Values");
+                });
 
             modelBuilder.Entity("UrlShortenerApi.Data.Models.Url", b =>
                 {
@@ -70,18 +84,23 @@ namespace UrlShortenerApi.Migrations.UrlsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("UrlShortenerApi.Data.Models.Url", b =>
                 {
                     b.HasOne("UrlShortenerApi.Data.Models.User", "CreatedBy")
-                        .WithMany()
+                        .WithMany("Urls")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("UrlShortenerApi.Data.Models.User", b =>
+                {
+                    b.Navigation("Urls");
                 });
 #pragma warning restore 612, 618
         }

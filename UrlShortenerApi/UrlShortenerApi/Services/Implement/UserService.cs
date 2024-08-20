@@ -15,13 +15,13 @@ namespace UrlShortenerApi.Services.Implement;
 
 public class UserService : IUserService
 {
-    private readonly UsersDbContext _usersDbContext;
+    private readonly ShortenUrlsContext _shortenUrlsContext;
     private readonly IConfiguration _configuration;
 
-    public UserService(IConfiguration configuration, UsersDbContext usersDbContext)
+    public UserService(IConfiguration configuration, ShortenUrlsContext shortenUrlsContext)
     {
         _configuration = configuration;
-        _usersDbContext = usersDbContext;
+        _shortenUrlsContext = shortenUrlsContext;
     }
 
     public async Task<LoginResponse> Login(LoginRequest request)
@@ -79,14 +79,14 @@ public class UserService : IUserService
 
         var makeUserAdmin = request is { Role: not null, Secret: not null } && request.Secret.Equals(_configuration["AdminSecret"]);
 
-        await _usersDbContext.Users.AddAsync(new User()
+        await _shortenUrlsContext.Users.AddAsync(new User()
         {
             Username = request.Username,
             PasswordHash = passwordHash,
             PasswordSalt = salt,
             Role = makeUserAdmin ? Role.Admin : Role.User
         });
-        await _usersDbContext.SaveChangesAsync();
+        await _shortenUrlsContext.SaveChangesAsync();
 
         return new RegisterResponse()
         {
@@ -96,12 +96,12 @@ public class UserService : IUserService
 
     public async Task<bool> UserExists(string requestUsername)
     {
-        return await _usersDbContext.Users.AnyAsync(user => user.Username.Equals(requestUsername));
+        return await _shortenUrlsContext.Users.AnyAsync(user => user.Username.Equals(requestUsername));
     }
 
-    public async Task<User> GetUserByUserName(string requestUsername)
+    public async Task<User?> GetUserByUserName(string requestUsername)
     {
-        return await _usersDbContext.Users.FirstAsync(user => user.Username.Equals(requestUsername));
+        return await _shortenUrlsContext.Users.FirstOrDefaultAsync(user => user.Username.Equals(requestUsername));
     }
 
     private string StringToSha256Hash(string text)

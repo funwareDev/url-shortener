@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrlShortenerApi.Data.Contexts;
 
 #nullable disable
 
-namespace UrlShortenerApi.Migrations.UrlsDb
+namespace UrlShortenerApi.Migrations
 {
-    [DbContext(typeof(UrlsDbContext))]
-    [Migration("20240819155713_UrlsCreated")]
-    partial class UrlsCreated
+    [DbContext(typeof(ShortenUrlsContext))]
+    partial class ShortenUrlsContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +22,20 @@ namespace UrlShortenerApi.Migrations.UrlsDb
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("UrlShortenerApi.Data.Models.StaticData", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Values");
+                });
+
             modelBuilder.Entity("UrlShortenerApi.Data.Models.Url", b =>
                 {
                     b.Property<string>("Identificator")
@@ -32,6 +43,9 @@ namespace UrlShortenerApi.Migrations.UrlsDb
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LongUrl")
                         .IsRequired()
@@ -58,24 +72,32 @@ namespace UrlShortenerApi.Migrations.UrlsDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("UrlShortenerApi.Data.Models.Url", b =>
                 {
                     b.HasOne("UrlShortenerApi.Data.Models.User", "CreatedBy")
-                        .WithMany()
+                        .WithMany("Urls")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("UrlShortenerApi.Data.Models.User", b =>
+                {
+                    b.Navigation("Urls");
                 });
 #pragma warning restore 612, 618
         }

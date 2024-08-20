@@ -2,5 +2,5 @@
 
 public class DeleteUrlResponse
 {
-    public bool Result { get; set; }
+    public bool Succeed { get; set; }
 }

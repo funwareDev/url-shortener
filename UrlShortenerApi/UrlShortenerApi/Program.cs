@@ -76,10 +76,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 var connectionString = builder.Configuration.GetConnectionString("local");
-builder.Services
-    .AddDbContext<UrlsDbContext>(options => options.UseSqlServer(connectionString))
-    .AddDbContext<UsersDbContext>(options => options.UseSqlServer(connectionString))
-    .AddDbContext<AboutDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ShortenUrlsContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();
 

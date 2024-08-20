@@ -9,6 +9,7 @@ namespace UrlShortenerApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+
 public class AuthController : ControllerBase
 {
     private IUserService _userService;

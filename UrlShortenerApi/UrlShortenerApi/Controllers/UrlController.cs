@@ -24,7 +24,7 @@ public class UrlController: ControllerBase
         ShortenUrlResponse result;
         try
         {
-            result = await _urlManagerService.Add(request);
+            result = await _urlManagerService.Create(request);
         }
         catch (Exception e)
         {

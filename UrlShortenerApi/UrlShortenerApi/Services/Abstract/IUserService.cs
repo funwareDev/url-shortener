@@ -9,5 +9,5 @@ public interface IUserService
     Task<LoginResponse> Login(LoginRequest request);
     Task<RegisterResponse> Register(RegisterRequest request);
     Task<bool> UserExists(string requestUsername);
-    Task<User> GetUserByUserName(string requestUsername);
+    Task<User?> GetUserByUserName(string requestUsername);
 }
