@@ -50,7 +50,7 @@ public class UrlController: ControllerBase
     }
     
     [HttpDelete]
-    [Authorize]
+    [Authorize(Policy = "RequireAdminRole")]
     public async Task<IActionResult> Delete(DeleteUrlRequest request)
     {
         DeleteUrlResponse result;

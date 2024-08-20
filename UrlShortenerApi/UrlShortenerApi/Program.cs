@@ -1,9 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UrlShortenerApi.Data.Contexts;
+using UrlShortenerApi.Data.Models;
+using UrlShortenerApi.Infrastructure.RoleHandling;
 using UrlShortenerApi.Services.Abstract;
 using UrlShortenerApi.Services.Implement;
 
@@ -76,10 +79,18 @@ builder.Services
     .AddDbContext<UrlsDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")))
     .AddDbContext<UsersDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 
+builder.Services.AddSingleton<IAuthorizationHandler, RoleHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy =>
+        policy.Requirements.Add(new RoleRequirement(Role.Admin)));
+});
+
 builder.Services.AddHttpContextAccessor();  
 builder.Services.AddTransient<IUrlShortenerService, UrlShortenerService>();
 builder.Services.AddTransient<IUrlManagerService, UrlManagerService>();
-builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

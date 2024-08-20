@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using UrlShortenerApi.Data.Contexts;
 using UrlShortenerApi.Data.Models;
 using UrlShortenerApi.Data.Requests;
@@ -31,7 +32,7 @@ public class UrlManagerService : IUrlManagerService
         User user = null!;
 
         var claims = _httpContextAccessor.HttpContext!.User.Claims;
-        var username = claims.First(c => c.Type == "Username").Value;
+        var username = claims.First(c => c.Type == ClaimTypes.GivenName).Value;
         if (await _userService.UserExists(username))
         {
             user = await _userService.GetUserByUserName(username);

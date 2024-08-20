@@ -43,13 +43,13 @@ public class UserService : IUserService
 
         return new LoginResponse()
         {
-            Token = GenerateAuthToken(request.Username)
+            Token = GenerateAuthToken(user)
         };
     }
 
-    private string GenerateAuthToken(string username)
+    private string GenerateAuthToken(User user)
     {
-        var claims = new List<Claim> { new("Username", username) };
+        var claims = new List<Claim> { new(ClaimTypes.GivenName, user.Username), new(ClaimTypes.Role, user.Role.ToString()) };
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]
             ?? throw new Exception("JWT Secret was not set.")));
