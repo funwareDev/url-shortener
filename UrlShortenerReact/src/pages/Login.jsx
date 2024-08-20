@@ -15,11 +15,19 @@ const Login = () => {
   const handleSubmitEvent = (e) => {
     e.preventDefault();
     if (input.username !== "" && input.password !== "") {
-      let data = performLogin(input.username, input.password)
+      performLogin(input.username, input.password).then((data) => {
+        setStoredToken(data.token)
+        const decoded = jwtDecode(data.token);
+        const name = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]
+        const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
-      setStoredToken(data.token)
-      const decoded = jwtDecode(data.token);
-      console.log(decoded)
+        context.isAdmin = role === "Admin"
+        context.userName = name
+
+        console.log(decoded)
+        console.log(name)
+        console.log(role)
+      })
     }
   };
 
@@ -39,9 +47,6 @@ const Login = () => {
           type="username"
           id="username"
           name="username"
-          placeholder="username"
-          aria-describedby="user-name"
-          aria-invalid="false"
           onChange={handleInput}
         />
       </div>
@@ -51,8 +56,6 @@ const Login = () => {
           type="password"
           id="password"
           name="password"
-          aria-describedby="user-password"
-          aria-invalid="false"
           onChange={handleInput}
         />
       </div>
