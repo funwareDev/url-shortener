@@ -111,11 +111,14 @@ public class UrlManagerService : IUrlManagerService
     public async Task<GetUrlResponse> Get(GetUrlRequest request)
     {
         var count = await _urlsDbContext.Urls.CountAsync();
+        var countToSkip = count < request.Count ? 0 : count - request.Count;
+        
         var result = await _urlsDbContext.Urls
-            .Skip(count - request.Count)
+            .Skip(countToSkip)
             .Take(request.Count)
-            .Reverse()
             .ToListAsync();
+
+        result.Reverse();
 
         return new GetUrlResponse()
         {

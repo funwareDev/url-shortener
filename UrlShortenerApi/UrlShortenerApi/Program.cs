@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen(options =>
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
-    
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
@@ -86,7 +86,7 @@ builder.Services.AddAuthorization(options =>
         policy.Requirements.Add(new RoleRequirement(Role.Admin)));
 });
 
-builder.Services.AddHttpContextAccessor();  
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IUrlShortenerService, UrlShortenerService>();
 builder.Services.AddTransient<IUrlManagerService, UrlManagerService>();
 builder.Services.AddTransient<IAboutService, AboutService>();
@@ -109,5 +109,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(options => options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 app.Run();
