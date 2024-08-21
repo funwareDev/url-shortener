@@ -113,12 +113,19 @@ public class UrlManagerService : IUrlManagerService
         var count = await _urlsDbContext.Urls.CountAsync();
         var countToSkip = count < request.Count ? 0 : count - request.Count;
         
-        var result = await _urlsDbContext.Urls
+        var urls = await _urlsDbContext.Urls.Include(url => url.CreatedBy)
             .Skip(countToSkip)
             .Take(request.Count)
+            .OrderByDescending(url => url.CreatedDate)
             .ToListAsync();
-
-        result.Reverse();
+        
+        var result = urls.Select(url => new UrlDto()
+        {
+            Identificator = url.Identificator,
+            CreatedBy = url.CreatedBy.Username,
+            CreatedDate = url.CreatedDate,
+            LongUrl = url.LongUrl
+        });
 
         return new GetUrlResponse()
         {

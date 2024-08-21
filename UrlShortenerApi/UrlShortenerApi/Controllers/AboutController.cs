@@ -26,7 +26,7 @@ public class AboutController : ControllerBase
     }
 
     [Authorize(Policy = "RequireAdminRole")]
-    [HttpPut]
+    [HttpPatch]
     public async Task<IActionResult> Update(UpdateStaticDataRequest request)
     {
         var result = await _aboutService.Update(request);

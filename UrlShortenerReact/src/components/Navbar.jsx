@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import "../styles/Navbar.css"
-import AuthContext from "../services/authProvider";
+import { AuthContext } from "../services/AuthProvider";
 
 const Navbar = () => {
-  let context = useContext(AuthContext);
+  const { authToken, logout } = useContext(AuthContext);
 
   return (
     <nav className="navbar">
@@ -11,7 +11,8 @@ const Navbar = () => {
       <div className="links">
         <a href="/">Home</a>
         <a href="/about">About</a>
-        {context.isLoggedIn ? <a href="/create-url" className="create-link">Create</a> : <a href="/login" className="login">Login</a>}
+        {authToken ? <a href="/create-url" className="create-link">Create</a> : <a href="/login" className="login">Login</a>}
+        {authToken && <a><button onClick={logout}>Logout</button></a>}
       </div>
     </nav>
   );

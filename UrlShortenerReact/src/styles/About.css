@@ -1,0 +1,11 @@
+.about p{
+    background-color: rgb(250, 250, 250);
+    border-radius: 5px;
+    padding: 15px;
+    margin: 0 0 15px 0;
+}
+
+.edit-buttons-container{
+    display: flex;
+    gap: 15px;
+}

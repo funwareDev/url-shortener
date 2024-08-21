@@ -1,5 +1,5 @@
-function timeAgo(createdDate: string): string {
-    const date = new Date(createdDate);
+function timeAgo(providedDate: string): string {
+    const date = new Date(providedDate);
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
     const diffInHours = Math.floor(diffInSeconds / 3600);

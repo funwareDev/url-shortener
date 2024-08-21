@@ -1,0 +1,4 @@
+.form_control{
+    display: flex;
+    gap: 15px;
+}

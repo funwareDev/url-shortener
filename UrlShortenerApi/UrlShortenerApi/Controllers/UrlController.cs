@@ -28,7 +28,9 @@ public class UrlController: ControllerBase
         }
         catch (Exception e)
         {
-            throw;
+            result = new ShortenUrlResponse();
+            result.Errors.Add(e.Message);
+            return BadRequest(result);
         }
         return Ok(result);
     }
